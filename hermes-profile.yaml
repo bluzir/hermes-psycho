@@ -1,0 +1,89 @@
+owner:
+  id: you
+  shared_root: /opt/data/owners/you/shared
+
+profile:
+  name: relationship
+  principal: "<ВАШЕ_ИМЯ>"
+  principal_dative: "<ВАШЕ_ИМЯ>"
+  principal_genitive: "<ВАШЕ_ИМЯ>"
+  workspace_name: relationship-ai
+  canonical_home: /opt/data/owners/you/profiles/relationship
+  compatibility_home: /opt/data/profiles/relationship
+  canonical_workspace_path: /opt/data/owners/you/profiles/relationship/workspace/relationship-ai
+  workspace_path: /opt/data/profiles/relationship/workspace/relationship-ai
+  hermes_home: /opt/data/profiles/relationship
+  timezone: UTC
+
+runtime:
+  model_provider: openai-codex
+  model: gpt-5.5
+  fallback_provider: xai-oauth
+  fallback_model: grok-4.3
+  fallback_base_url: https://api.x.ai/v1
+  stt_provider: xai
+  telegram_rich_messages: true
+  browser:
+    mode: disabled
+    allowed_domains: []
+    record_sessions: false
+    write_policy: confirm_before_submit
+  swarm:
+    enabled: false
+    mode: single_agent
+
+knowledge:
+  root: knowledge
+  resolver: knowledge/RESOLVER.md
+  schema: knowledge/schema.md
+  public_index_dirs:
+    - attachment
+    - ifs
+    - schema-therapy
+    - communication
+    - systemic
+    - family
+  private_dirs:
+    - people
+    - self
+    - contexts
+    - data
+  import_policy: public_only
+  synthesis:
+    think_enabled: false
+    dream_enabled: false
+    eval_enabled: false
+    corpus: public_only
+    provenance_required: true
+
+privacy:
+  git_public_dirs:
+    - knowledge
+    - protocols
+    - hermes
+    - deploy
+    - scripts
+    - skills
+  local_private_dirs:
+    - people
+    - self
+    - contexts
+    - data
+  curated_memory_policy: no_pii
+
+self_improvement:
+  preferences_file: knowledge/_meta/preferences.md
+  gaps_file: _gaps/queue.md
+
+skills:
+  external_dir: workspace/relationship-ai/skills
+  bundled_policy: deny_all_except_external
+  self_improvement_review: weekly
+
+soul:
+  role: рабочий копайлот и со-мыслитель по отношениям
+  domain: отношения
+  voice_language: ru
+  voice_address: "<ВАШЕ_ИМЯ>"
+  voice_tone: Тепло, по делу, без морализаторства
+  red_flags: protocols/red-flags.md

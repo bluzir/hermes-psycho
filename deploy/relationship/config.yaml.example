@@ -1,0 +1,199 @@
+# generated from hermes-profile.yaml by scripts/render-hermes-profile.py
+# deploy/relationship/config.yaml.example
+# Owner: you
+# Canonical home: /opt/data/owners/you/profiles/relationship
+# Copy to runtime home: /opt/data/profiles/relationship/config.yaml.
+
+model:
+  provider: openai-codex
+  default: gpt-5.5
+
+fallback_providers:
+  - provider: xai-oauth
+    model: grok-4.3
+    base_url: https://api.x.ai/v1
+
+compression:
+  codex_gpt55_autoraise: false
+
+platform_toolsets:
+  telegram:
+    - web
+    - vision
+    - skills
+    - todo
+    - cronjob
+    - messaging
+    - session_search
+    - memory
+    - terminal
+    - file
+
+capabilities:
+  browser:
+    mode: disabled
+    allowed_domains: []
+    record_sessions: false
+    write_policy: confirm_before_submit
+  swarm:
+    enabled: false
+    mode: single_agent
+  gbrain_synthesis:
+    think_enabled: false
+    dream_enabled: false
+    eval_enabled: false
+    corpus: public_only
+    provenance_required: true
+
+skills:
+  external_dirs:
+    - workspace/relationship-ai/skills
+  disabled:
+    # apple (5)
+    - apple-notes
+    - apple-reminders
+    - findmy
+    - imessage
+    - macos-computer-use
+    # autonomous-ai-agents (4)
+    - claude-code
+    - codex
+    - hermes-agent
+    - opencode
+    # creative (19)
+    - architecture-diagram
+    - ascii-art
+    - ascii-video
+    - baoyu-comic
+    - baoyu-infographic
+    - claude-design
+    - comfyui
+    - design-md
+    - excalidraw
+    - humanizer
+    - ideation
+    - manim-video
+    - p5js
+    - pixel-art
+    - popular-web-designs
+    - pretext
+    - sketch
+    - songwriting-and-ai-music
+    - touchdesigner-mcp
+    # data-science (1)
+    - jupyter-live-kernel
+    # devops (3)
+    - kanban-orchestrator
+    - kanban-worker
+    - webhook-subscriptions
+    # dogfood (1)
+    - dogfood
+    # email (1)
+    - himalaya
+    # gaming (2)
+    - minecraft-modpack-server
+    - pokemon-player
+    # github (6)
+    - codebase-inspection
+    - github-auth
+    - github-code-review
+    - github-issues
+    - github-pr-workflow
+    - github-repo-management
+    # mcp (1)
+    - native-mcp
+    # media (5)
+    - gif-search
+    - heartmula
+    - songsee
+    - spotify
+    - youtube-content
+    # mlops (9)
+    - audiocraft-audio-generation
+    - dspy
+    - evaluating-llms-harness
+    - huggingface-hub
+    - llama-cpp
+    - obliteratus
+    - segment-anything-model
+    - serving-llms-vllm
+    - weights-and-biases
+    # note-taking (1)
+    - obsidian
+    # productivity (9)
+    - airtable
+    - google-workspace
+    - linear
+    - maps
+    - nano-pdf
+    - notion
+    - ocr-and-documents
+    - powerpoint
+    - teams-meeting-pipeline
+    # red-teaming (1)
+    - godmode
+    # research (6)
+    - arxiv
+    - blogwatcher
+    - llm-wiki
+    - polymarket
+    - research
+    - research-paper-writing
+    # smart-home (1)
+    - openhue
+    # social-media (1)
+    - xurl
+    # software-development (11)
+    - debugging-hermes-tui-commands
+    - hermes-agent-skill-authoring
+    - node-inspect-debugger
+    - plan
+    - python-debugpy
+    - requesting-code-review
+    - spike
+    - subagent-driven-development
+    - systematic-debugging
+    - test-driven-development
+    - writing-plans
+    # yuanbao (1)
+    - yuanbao
+
+mcp_servers:
+  gbrain:
+    command: /opt/data/profiles/relationship/.bun/bin/gbrain
+    args:
+      - serve
+    env:
+      GBRAIN_HOME: /opt/data/profiles/relationship
+      GBRAIN_NO_BANNER: "1"
+      MCP_STDIO: "1"
+      PATH: /opt/data/profiles/relationship/.bun/bin:/usr/local/bin:/usr/bin:/bin
+      LITELLM_API_KEY: ""
+      LITELLM_BASE_URL: https://openrouter.ai/api/v1
+    enabled: false
+    tools:
+      include:
+        - search
+        - query
+        - get_page
+        - list_pages
+        - get_stats
+        - get_health
+
+stt:
+  enabled: true
+  provider: xai
+
+telegram:
+  extra:
+    rich_messages: true
+
+terminal:
+  backend: local
+  cwd: /opt/data/profiles/relationship/workspace/relationship-ai
+  timeout: 1800
+
+timezone: UTC
+
+approvals:
+  cron_mode: approve

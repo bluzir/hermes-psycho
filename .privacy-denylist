@@ -1,0 +1,5 @@
+# Real names / slugs that must never leak into git-tracked theory
+# (knowledge/, protocols/, hermes/). One per line. check-privacy.sh greps for these.
+# Add the real first names of people in your life before you start filling people/.
+# Example:
+# Ivan

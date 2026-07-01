@@ -1,0 +1,25 @@
+# --- Личные данные пользователя — не коммитим ---
+people/*
+!people/_TEMPLATE/
+!people/_TEMPLATE/**
+!people/_index.md
+self/*
+!self/_TEMPLATE/
+!self/_TEMPLATE/**
+contexts/*
+!contexts/_TEMPLATE/
+!contexts/_TEMPLATE/**
+data/
+*.audio
+*.transcript
+
+# examples/ — выдуманный демо-контент, коммитим целиком (не игнорим)
+
+# --- Локальное окружение / тулинг ---
+.env
+.venv/
+.DS_Store
+__pycache__/
+*.pyc
+.superpowers/
+.claude/settings.local.json
