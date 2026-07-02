@@ -9,7 +9,7 @@
 # profile home (requires HERMES_HOME) and refuses to run otherwise.
 #
 # It deliberately does NOT run interactive or host-level steps:
-#   - `hermes login`        (interactive auth)   -> printed as a manual step
+#   - `hermes setup`        (interactive auth/provider) -> printed as a manual step
 #   - `docker compose up`   (host-level, all profiles) -> printed as a manual step
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -102,7 +102,7 @@ fi
 echo
 echo "==== bootstrap done ===="
 echo "Manual next steps (NOT run automatically):"
-echo "  - hermes login            # interactive auth -> auth.json (model + xai STT)"
+echo "  - hermes setup            # interactive auth/provider -> auth.json (model + xai STT)"
 echo "  - docker compose up -d    # host-level, brings up the shared 'hermes' container"
 echo "                            # (see deploy/relationship/README.md for the full command)"
 echo "  - enable gbrain: set mcp_servers.gbrain.enabled: true in config.yaml, then /restart"

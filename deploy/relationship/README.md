@@ -1,5 +1,8 @@
 # Деплой профиля relationship — ранбук
 
+> **Это продвинутый self-host под мультипрофильный сервер автора.** Новичку — начни с
+> [`docs/INSTALL.md`](../../docs/INSTALL.md) (Тир 1/Тир 2 с нуля).
+
 Профиль `relationship` в консолидированном контейнере `hermes` (`/opt/data/profiles/relationship/`),
 по образцу `deploy/health`. Изоляция = отдельный `HERMES_HOME`, отдельный бот, allowlist=пользователь,
 свой gbrain-индекс.
@@ -17,7 +20,7 @@
 /opt/data/profiles/relationship/
 ├── config.yaml          # скопирован из deploy/relationship/config.yaml.example
 ├── .env                 # скопирован из deploy/relationship/.env.example (заполнен)
-├── auth.json            # hermes login (openai-codex + xai)
+├── auth.json            # hermes setup / provider env var (openai-codex + xai)
 ├── gb                   # обёртка gbrain (создаётся install-gbrain.sh)
 ├── .bun/bin/gbrain      # бинарь gbrain 0.42.53.0 (создаётся install-gbrain.sh)
 ├── scripts/             # ← СЮДА копировать *.sh из workspace перед регистрацией кронов
@@ -97,8 +100,14 @@ docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -
 ```
 
 Скрипт:
-- копирует весь `.bun/` (bun + gbrain) из соседнего профиля (content или health)
-- создаёт обёртку `/opt/data/profiles/relationship/gb` (GBRAIN_HOME + LITELLM_API_KEY + PATH)
+- **fast-path (мультипрофильный сервер):** копирует весь `.bun/` (bun + gbrain) из
+  соседнего профиля (content или health);
+- **fallback (первый/единственный профиль, соседа нет):** канонная установка gbrain —
+  `git clone https://github.com/garrytan/gbrain.git && bun install && bun link`
+  (Bun ≥1.3.10) либо бинарь из [релизов](https://github.com/garrytan/gbrain/releases).
+  Если ни то ни другое не удалось — скрипт падает с внятной инструкцией (см. gbrain
+  `INSTALL_FOR_AGENTS.md` и `docs/INSTALL.md`, Тир 2), а не с криптичной ошибкой;
+- создаёт обёртку `/opt/data/profiles/relationship/gb` (GBRAIN_HOME + LITELLM_API_KEY + PATH).
 
 ### 5. Инициализировать gbrain (PGlite)
 
@@ -125,7 +134,7 @@ docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -
 ```
 
 > `bootstrap.sh` — тонкая обёртка над внешними `hermes`/`gbrain`; НЕ запускает
-> интерактивный `hermes login` и host-level `docker compose up` (их печатает как
+> интерактивный `hermes setup` и host-level `docker compose up` (их печатает как
 > ручные шаги). Если гоняешь шаги вручную — синхронизацию скриптов всё равно делает
 > bootstrap (не отдельный `cp`).
 
@@ -140,14 +149,23 @@ docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -
 `embedding_dimensions: 1536`, `provider_base_urls.litellm: https://openrouter.ai/api/v1`.
 Нужен LITELLM_API_KEY (sk-or-...) в `.env`.
 
-### 8. Авторизовать модель (auth.json)
+### 8. Авторизовать модель (провайдер)
+
+`hermes login` **удалён**. Авторизация модели теперь — через `hermes setup` (интерактивный
+мастамер) либо через env-переменную провайдера в `.env` (без интерактива).
 
 ```bash
-# Создать auth.json через hermes login:
-docker exec -it -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes hermes login
-# Либо скопировать auth.json существующего профиля (если openai-codex + xai там уже авторизованы):
-# cp /opt/data/profiles/<другой>/auth.json /opt/data/profiles/relationship/auth.json
+# Вариант А — интерактивный мастер (создаёт/обновляет auth.json):
+docker exec -it -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes hermes setup
+# Вариант Б — ключ провайдера в .env (без интерактива), напр. для OpenRouter:
+#   OPENROUTER_API_KEY=sk-or-...    # либо ANTHROPIC_API_KEY / XAI_API_KEY — по выбранному провайдеру
+# Вариант В — скопировать auth.json существующего профиля (если провайдер там уже авторизован):
+#   cp /opt/data/profiles/<другой>/auth.json /opt/data/profiles/relationship/auth.json
 ```
+
+> **Провайдер модели — сменный.** `openrouter` / `anthropic` / `xai` / … — выбор за тобой;
+> `openai-codex` / `gpt-5.5` — это просто выбор автора, не требование. Нужен только ключ
+> выбранного провайдера (`OPENROUTER_API_KEY` / `ANTHROPIC_API_KEY` / `XAI_API_KEY`).
 
 > **Спайк авторизации:** `openai-codex` (модель) + `xai` (STT) из одного `auth.json` —
 > доказано профилем content (xai primary + openai-codex fallback в одном auth.json).
@@ -316,14 +334,18 @@ HERMES_UID=$(id -u) HERMES_GID=$(id -g) \
 
 1. **Авторизация (codex + xai в одном `auth.json`) — ✅ РЕШЕНО.** Профиль `content`
    (`deploy/content-trendwatch/`) доказывает сосуществование: xai primary + `openai-codex` fallback
-   в одном `auth.json`. Для relationship: модель `openai-codex` через `hermes login`; STT `xai` — проще всего
-   `XAI_API_KEY` в `.env` (либо xai-creds в auth.json). В config добавлен `fallback_providers: xai/grok-4.3`.
+   в одном `auth.json`. Для relationship: модель `openai-codex` через `hermes setup` (или
+   ключ провайдера в `.env`); STT `xai` — проще всего `XAI_API_KEY` в `.env` (либо xai-creds
+   в auth.json). В config добавлен `fallback_providers: xai/grok-4.3`. Провайдер сменный —
+   `openai-codex`/`gpt-5.5` лишь выбор автора; подойдёт `openrouter`/`anthropic`/`xai`/….
 2. **Точный id модели — проверить `hermes models list`.** Цель `gpt-5.5`; известно-рабочий
    аналог `gpt-5.3-codex` (профиль content). Если 5.5 ещё не в образе — временно `gpt-5.3-codex`.
 3. **Эмбеддер — ✅ РЕШЕНО через OpenRouter (проверено эмпирически).** OpenRouter отдаёт
    `text-embedding-3-small` по OpenAI-wire (HTTP 200, 1536 dims). Настройка через `scripts/gbrain-config.sh`.
-4. **gbrain установка — ✅ РЕШЕНО (mirror server).** `install-gbrain.sh` копирует рабочий
-   `.bun/` из соседнего профиля (content или health). Затем `gbrain init --pglite`.
+4. **gbrain установка — ✅ РЕШЕНО.** `install-gbrain.sh` fast-path'ом копирует рабочий
+   `.bun/` из соседнего профиля (content или health); если соседа нет (первый/единственный
+   профиль) — fallback на канонную установку (`git clone garrytan/gbrain && bun install &&
+   bun link`, либо релизный бинарь). Затем `gbrain init --pglite`.
 5. **Активация семантики:** `gbrain init --pglite` → **`scripts/gbrain-config.sh`** (эмбеддер→OpenRouter)
    → `gb import` knowledge-слоёв → `gb embed --stale` → `mcp_servers.gbrain.enabled: true` в `config.yaml`.
    До этого knowledge работает грепом (brain-first.md).
