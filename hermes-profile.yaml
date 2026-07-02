@@ -87,3 +87,6 @@ soul:
   voice_address: "<ВАШЕ_ИМЯ>"
   voice_tone: Тепло, по делу, без морализаторства
   red_flags: protocols/red-flags.md
+  onboarding_protocol: protocols/life-interview.md
+  onboarding_progress: self/interview-progress.md
+  pattern_protocols: protocols/multi-lens-read.md / protocols/pattern-review.md

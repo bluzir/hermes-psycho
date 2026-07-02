@@ -79,12 +79,41 @@ hermes-psycho/
    python3 scripts/render-hermes-profile.py --write
    ```
    Это перепишет `hermes/SOUL.md`, `config.yaml.example` и bash-скрипты из манифеста.
-4. **Посмотри `_TEMPLATE`-шаблоны** в `people/` и `self/` и выдуманный пример в `examples/` —
+4. **Проверь сборку** — один smoke-прогон без сети и контейнера:
+   ```bash
+   bash scripts/verify.sh
+   ```
+   Он гоняет render `--check`, тесты, гейт приватности и гейт структуры и печатает
+   компактный OK/FAIL по шагам. Тесты отдельно — `bash scripts/test.sh` (НЕ голый
+   `python3 -m unittest discover` из корня — он находит 0 тестов и «зеленеет» вхолостую).
+5. **Посмотри `_TEMPLATE`-шаблоны** в `people/` и `self/` и выдуманный пример в `examples/` —
    чтобы понять, как агент хранит и читает личный контекст.
-5. **Разверни** по ранбуку `deploy/relationship/README.md` (Telegram-бот, gbrain-индекс,
+6. **Разверни** по ранбуку `deploy/relationship/README.md` (Telegram-бот, gbrain-индекс,
    single-user allowlist).
 
 Пошаговый разбор кастомизации под свой домен — в [`docs/CUSTOMIZATION.md`](docs/CUSTOMIZATION.md).
+Сквозные сценарии — [`docs/SCENARIOS.md`](docs/SCENARIOS.md);
+шпаргалка команд — [`docs/COMMANDS.md`](docs/COMMANDS.md);
+устройство движка — [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+### Локально vs на сервере
+
+Частый вопрос: «а где веб-приложение / какой порт открыть?». **Локально запускать нечего** —
+это контент/конфиг-пак, а не сервер. Локально ты только **авторишь** (правишь манифест и
+`knowledge/`/`protocols/`) и **валидируешь** (`render` → `scripts/verify.sh`). Ни порта, ни UI,
+ни `dev server`. **Запуск = деплой:** по ранбуку `deploy/relationship/README.md` пак разворачивается
+в контейнер внешнего фреймворка Hermes, и ты общаешься с ним через своего Telegram-бота.
+Подробнее — [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+### Онбординг / первый запуск
+
+После деплоя система пустая: `self/` и `people/` — только шаблоны, агенту не с чем сверяться,
+и разборы будут generic. Чтобы наполнить её — первое сообщение боту: **«хочу рассказать о себе»**.
+Это запускает протокол [life-interview](protocols/life-interview.md): агент по блокам (происхождение,
+семья, романтика, бизнес, друзья) задаёт по 2–3 вопроса за раз, после каждого блока пишет выжимку
+в `self/map.md` и `self/spheres/`, заводит карточки людей в `people/<slug>/`. Прервать можно в любой
+момент — прогресс в `self/interview-progress.md`, при возврате продолжит с незаконченного блока.
+Пока карта не собрана, разборы (`multi-lens-read`, `pattern-review`) честно скажут, что данных ещё нет.
 
 ---
 

@@ -110,18 +110,24 @@ docker exec -u 1101 hermes bash -lc \
    /opt/data/profiles/relationship/.bun/bin/gbrain init --pglite'
 ```
 
-### 6. Скопировать скрипты в profile scripts-dir
+### 6. Синхронизировать скрипты через bootstrap.sh
 
-⚠️ **Этот шаг обязателен** — крон резолвит `--script name.sh` относительно
-`HERMES_HOME/scripts/` (= `/opt/data/profiles/relationship/scripts/`), а НЕ из workspace репо.
-Повторять после каждой правки скрипта.
+⚠️ Крон резолвит `--script name.sh` относительно `HERMES_HOME/scripts/`
+(= `/opt/data/profiles/relationship/scripts/`), а НЕ из workspace репо. Раньше
+это был ручной `cp` (легко забыть после правки скрипта). Теперь — **идемпотентный
+`scripts/bootstrap.sh`**, который в т.ч. re-синхронизирует скрипты в profile
+scripts-dir (шаги 4/6 install-gbrain + init + config + cp scripts + import).
+Повторный запуск безопасен и печатает `already installed` / `updated`.
 
 ```bash
-docker exec -u 1101 hermes bash -lc \
-  'cp /opt/data/profiles/relationship/workspace/relationship-ai/scripts/*.sh \
-      /opt/data/profiles/relationship/scripts/ && \
-   chmod 755 /opt/data/profiles/relationship/scripts/*.sh'
+docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -lc \
+  'bash /opt/data/profiles/relationship/workspace/relationship-ai/scripts/bootstrap.sh'
 ```
+
+> `bootstrap.sh` — тонкая обёртка над внешними `hermes`/`gbrain`; НЕ запускает
+> интерактивный `hermes login` и host-level `docker compose up` (их печатает как
+> ручные шаги). Если гоняешь шаги вручную — синхронизацию скриптов всё равно делает
+> bootstrap (не отдельный `cp`).
 
 ### 7. Настроить эмбеддер (gbrain-config.sh)
 
@@ -148,11 +154,32 @@ docker exec -it -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes he
 
 ### 9. Запустить профиль
 
+> **Preflight (обязательно ДО `docker compose up`):** запусти read-only доктора
+> внутри контейнера с выставленным `HERMES_HOME` — он проверит .env (5 ключей,
+> без вывода значений), наличие `hermes`/`gb` на PATH, дрейф скриптов, права на
+> logs и включён ли gbrain, ничего не меняя:
+>
+> ```bash
+> docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -lc \
+>   'bash /opt/data/profiles/relationship/workspace/relationship-ai/scripts/doctor.sh'
+> ```
+>
+> Локально на чистом checkout (без сервера) достаточно `bash scripts/verify.sh`
+> (render --check + тесты + privacy + structure).
+
 ```bash
 cd /home/hermes/hermes
 HERMES_UID=$(id -u) HERMES_GID=$(id -g) \
   docker compose --env-file /opt/data/profiles/relationship/.env -f compose.yaml -p hermes up -d
 ```
+
+> **`.env` — сверка переменных:** compose-команда читает `.env` через `--env-file`
+> и берёт из него только TELEGRAM_*/LITELLM_*/XAI_* (+ OPENAI_API_KEY legacy).
+> Проект (`-p hermes`), image и имя контейнера заданы стеком/командной строкой, а
+> `HERMES_UID/GID` — inline `$(id -u)`/`$(id -g)`. Старые `HERMES_IMAGE` /
+> `HERMES_HOST_HOME` / `HERMES_COMPOSE_PROJECT=hermes-relationship` /
+> `HERMES_CONTAINER_NAME=…-gateway` / `HERMES_UID=1000` из `.env.example` удалены как
+> устаревшие (описывали отдельный контейнер; сейчас все профили в одном `hermes`).
 
 Проверить:
 
@@ -203,7 +230,8 @@ nano /opt/data/profiles/relationship/config.yaml
 # Затем через чат: /restart
 ```
 
-Изменения скриптов — повторить шаг 6 (cp в profile scripts-dir).
+Изменения скриптов — повторить шаг 6 (`bash scripts/bootstrap.sh`, идемпотентно
+re-синхронизирует скрипты в profile scripts-dir).
 
 Reindex knowledge после правок:
 

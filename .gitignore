@@ -9,6 +9,8 @@ self/*
 contexts/*
 !contexts/_TEMPLATE/
 !contexts/_TEMPLATE/**
+_gaps/*
+!_gaps/queue.md
 data/
 *.audio
 *.transcript

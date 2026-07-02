@@ -24,6 +24,7 @@
 | «Откуда у меня этот паттерн», корни в детстве | любой | `family/` + `schema-therapy/` + `attachment/` | `multi-lens-read` |
 | Сливаю дела/сделки на пике успеха, не довожу до конца, прокрастинирую уязвимый шаг | любой | `self-regulation/` (+ `attachment/`, `ifs/`) | `multi-lens-read` |
 | Рассказать о себе подробно / онбординг / составить карту | любой | все слои | `life-interview` |
+| «Покажи паттерны / что у меня повторяется» (по всей базе) | любой | `attachment/` + `ifs/` + `schema-therapy/` + `systemic/` | `pattern-review` (+ `multi-lens-read`) |
 
 ### Как применять таблицу
 

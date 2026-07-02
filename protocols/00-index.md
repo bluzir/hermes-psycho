@@ -20,6 +20,7 @@
 | [new-request-playbook.md](new-request-playbook.md) | ситуация или паттерн без плейбука в `knowledge/playbooks/` | черновик плейбука + строка в индексе после ок пользователя |
 | [add-context.md](add-context.md) | голос/текст с новым фактом о человеке из базы | запись в `people/<slug>/notes.md` + при значимости обновление `profile.md` / `map.md` |
 | [life-interview.md](life-interview.md) | «хочу рассказать о себе подробно», онбординг, «составь карту меня и моих отношений» | `self/map.md` + `self/spheres/` + `people/<slug>/` карточки + `self/interview-progress.md` |
+| [pattern-review.md](pattern-review.md) | по запросу: «покажи паттерны / что у меня повторяется» → читает `self/map.md` + `people/*/map.md` + разговоры | 2–4 повторяющихся темы ACROSS entities как гипотезы + вклад пользователя; пусто → честно «нет данных, давай онбординг». НЕ nightly `/patterns` из gbrain |
 
 ## Основные цепочки
 

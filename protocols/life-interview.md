@@ -81,7 +81,7 @@ family-of-origin заметки).
 
 **Выход:**
 - `people/<slug>/` карточки для названных партнёров/кофаундеров.
-- `self/spheres/business.md` — ключевые люди, паттерны доверия и ролей, где боль.
+- `self/spheres/work.md` — ключевые люди, паттерны доверия и ролей, где боль.
 
 ---
 
@@ -167,7 +167,7 @@ family-of-origin заметки).
 | Карта пользователя | `self/map.md` |
 | Сфера семья | `self/spheres/family.md` |
 | Сфера романтика | `self/spheres/romantic.md` |
-| Сфера бизнес | `self/spheres/business.md` |
+| Сфера бизнес | `self/spheres/work.md` |
 | Сфера друзья | `self/spheres/friends.md` |
 | Прогресс интервью | `self/interview-progress.md` |
 | Карточки людей | `people/<slug>/profile.md` + `map.md` |

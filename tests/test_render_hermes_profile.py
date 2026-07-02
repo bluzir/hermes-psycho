@@ -91,6 +91,12 @@ class HermesProfileRendererTests(unittest.TestCase):
         maintain = rendered["scripts/brain-maintain.sh"]
 
         self.assertIn("Private dirs (people, self, contexts, data) не импортируются", soul)
+        self.assertIn("## Онбординг / первый запуск", soul)
+        self.assertIn("protocols/life-interview.md", soul)
+        self.assertIn("self/interview-progress.md", soul)
+        self.assertIn("## Паттерны / повторяющиеся темы", soul)
+        self.assertIn("protocols/multi-lens-read.md / protocols/pattern-review.md", soul)
+        self.assertIn("в базе пока нет данных", soul)
         self.assertIn("Owner: `you`", soul)
         self.assertIn("Canonical home: `/opt/data/owners/you/profiles/relationship`", soul)
         self.assertIn("# Owner: you", config)

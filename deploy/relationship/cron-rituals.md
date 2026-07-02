@@ -21,14 +21,12 @@ docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes hermes
 
 Крон резолвит голое имя `--script` относительно `HERMES_HOME/scripts/`, то есть файл
 обязан лежать в **`/opt/data/profiles/relationship/scripts/`** — НЕ в workspace репо.
-После каждой правки скрипта — повторить `cp`:
+После каждой правки скрипта — прогнать **идемпотентный `scripts/bootstrap.sh`**
+(он re-синхронизирует скрипты в profile scripts-dir; заменяет ручной `cp`):
 
 ```bash
-docker exec -u 1101 hermes bash -lc \
-  'mkdir -p /opt/data/profiles/relationship/scripts && \
-   cp /opt/data/profiles/relationship/workspace/relationship-ai/scripts/*.sh \
-      /opt/data/profiles/relationship/scripts/ && \
-   chmod 755 /opt/data/profiles/relationship/scripts/*.sh'
+docker exec -u 1101 -e HERMES_HOME=/opt/data/profiles/relationship hermes bash -lc \
+  'bash /opt/data/profiles/relationship/workspace/relationship-ai/scripts/bootstrap.sh'
 ```
 
 Источник: `hermes-agent/cron/scheduler.py` — `scripts_dir = _get_hermes_home() / "scripts"`.

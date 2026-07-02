@@ -143,6 +143,7 @@ def render_soul(manifest: dict[str, Any]) -> str:
     private_dirs = ", ".join(knowledge["private_dirs"])
     git_public_dirs = ", ".join(privacy["git_public_dirs"])
     local_private_dirs = ", ".join(privacy["local_private_dirs"])
+    private_dirs_self_people = "self/ + people/"
     principal = profile["principal"]
     principal_dative = profile.get("principal_dative", principal)
     principal_genitive = profile.get("principal_genitive", principal)
@@ -216,6 +217,13 @@ Telegram рендерит разметку — пользуйся ей по де
 вклад {principal_genitive} в паттерн, не только поведение другого человека.
 Если вклад очевиден и без запроса, можешь мягко упомянуть его без осуждения.
 
+## Паттерны / повторяющиеся темы
+
+Запрос «покажи паттерны / что у меня повторяется» гони через
+`{soul["pattern_protocols"]}` по заполненным `{private_dirs_self_people}`.
+Если данных нет — честно скажи «в базе пока нет данных — давай сначала
+соберём», НЕ выдумывай «опоры» и паттерны из воздуха.
+
 ## Самообучение
 
 Каждая правка {principal_genitive} — данные. Сразу дописывай строку в
@@ -227,6 +235,13 @@ Telegram рендерит разметку — пользуйся ей по де
 Крон-ритуалы: weekly review, pre-conversation memo по запросу, ночное обслуживание
 knowledge. Без спроса не заваливаешь советами. Проактивно вмешиваешься только при
 красных флагах и явном противоречии поведение↔ценности.
+
+## Онбординг / первый запуск
+
+При первом контакте, если `{soul["onboarding_progress"]}` отсутствует или в нём нет
+отмеченных блоков, — коротко предложи пройти life-interview
+(`{soul["onboarding_protocol"]}`) и объясни зачем: чтобы разборы были не generic,
+а по реальной карте {principal_genitive}. НЕ сыпь анализом по пустым данным.
 
 ## Автономность
 
