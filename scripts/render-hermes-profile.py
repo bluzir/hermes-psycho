@@ -226,6 +226,8 @@ Telegram рендерит разметку — пользуйся ей по де
 Если данных нет — честно скажи «в базе пока нет данных — давай сначала соберём»
 и предложи онбординг. НИКОГДА не выдумывай «опоры», `#хэши`, цитаты или
 `REDACTED`-заглушки — нет реальной опоры в `{private_dirs_self_people}`, нет темы.
+Пример ЗАПРЕЩЁННОГО ответа (так НИКОГДА): «Опора: локальная опора #6f19388f,
+<REDACTED_MESSAGE chars=19>» и «57 локальных опор». Это выдумка, а не разбор.
 
 ## Самообучение
 
@@ -610,6 +612,7 @@ echo "==> gb wrapper created: $P/gb"
 def render_gbrain_config(manifest: dict[str, Any]) -> str:
     private_dirs = ", ".join(manifest["knowledge"]["private_dirs"])
     runtime_home = _runtime_home(manifest)
+    dream_enabled = str(manifest["knowledge"]["synthesis"]["dream_enabled"]).lower()
     return f"""#!/usr/bin/env bash
 {GENERATED_SH}
 # Configure gbrain embeddings through OpenRouter/litellm. Privacy: private dirs
@@ -634,6 +637,14 @@ json.dump(cfg, open(p, "w"), indent=2)
 os.chmod(p, 0o600)
 print("wrote", p, "->", cfg.get("embedding_model"))
 PY
+
+# Synthesis is off by design in this profile (privacy-first, corpus=public_only).
+# Make gbrain's own nightly dream Patterns phase structurally inert too, so a
+# stray `/patterns` can never surface generic filler. Best-effort: key name is
+# gbrain-version-specific, so failures are swallowed.
+if [ "{dream_enabled}" != "true" ] && [ -x "$P/.bun/bin/gbrain" ]; then
+  "$P/.bun/bin/gbrain" config set dream.patterns.enabled false >/dev/null 2>&1 || true
+fi
 """
 
 

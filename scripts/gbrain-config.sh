@@ -22,3 +22,11 @@ json.dump(cfg, open(p, "w"), indent=2)
 os.chmod(p, 0o600)
 print("wrote", p, "->", cfg.get("embedding_model"))
 PY
+
+# Synthesis is off by design in this profile (privacy-first, corpus=public_only).
+# Make gbrain's own nightly dream Patterns phase structurally inert too, so a
+# stray `/patterns` can never surface generic filler. Best-effort: key name is
+# gbrain-version-specific, so failures are swallowed.
+if [ "false" != "true" ] && [ -x "$P/.bun/bin/gbrain" ]; then
+  "$P/.bun/bin/gbrain" config set dream.patterns.enabled false >/dev/null 2>&1 || true
+fi
