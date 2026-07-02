@@ -11,7 +11,8 @@ contexts/*
 !contexts/_TEMPLATE/**
 _gaps/*
 !_gaps/queue.md
-data/
+data/*
+!data/README.md
 *.audio
 *.transcript
 

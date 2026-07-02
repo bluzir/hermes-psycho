@@ -5,11 +5,13 @@ cd "$(dirname "$0")/.."
 fail=0
 
 # 1. Personal dirs must hold no tracked real data. Only the public scaffolds are
-# allowed: _TEMPLATE/ dirs and people/_index.md. Any other tracked path under
-# people/ self/ contexts/ data/ (e.g. a real person dir) fails the build.
+# allowed: _TEMPLATE/ dirs, people/_index.md, and the data/ drop-folder explainer
+# data/README.md. Any other tracked path under people/ self/ contexts/ data/
+# (e.g. a real person dir, or real sourced material under data/raw/) fails the build.
 TRACKED_PERSONAL=$(git ls-files people self contexts data 2>/dev/null \
   | grep -vE '^(people|self|contexts)/_TEMPLATE/' \
-  | grep -vE '^people/_index\.md$' || true)
+  | grep -vE '^people/_index\.md$' \
+  | grep -vE '^data/README\.md$' || true)
 if [[ -n "$TRACKED_PERSONAL" ]]; then
   echo "PRIVACY FAIL: real personal files are tracked by git:" >&2
   echo "$TRACKED_PERSONAL" >&2

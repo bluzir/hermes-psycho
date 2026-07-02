@@ -19,6 +19,8 @@
 | [co-thinking.md](co-thinking.md) | «застрял / не знаю / помоги разобраться» | со-мышление: присутствие → база → линзы → свежий угол |
 | [new-request-playbook.md](new-request-playbook.md) | ситуация или паттерн без плейбука в `knowledge/playbooks/` | черновик плейбука + строка в индексе после ок пользователя |
 | [add-context.md](add-context.md) | голос/текст с новым фактом о человеке из базы | запись в `people/<slug>/notes.md` + при значимости обновление `profile.md` / `map.md` |
+| [onboarding.md](onboarding.md) | первый контакт / пустая база; «онбординг» / «начнём» / «расскажу о себе» / `/onboarding` | меню 4 путей + рекомендация микса + маршрутизация в `life-interview` / `ingest`; карта прогресса в `self/interview-progress.md` |
+| [ingest.md](ingest.md) | «переработай инбокс / data/raw», «залей транскрипты / дневники / переписки», приложен дамп | дистилляты из `data/raw/…` в `self/map.md` / `self/spheres/*` / `self/values.md` / `people/<slug>/*` с provenance |
 | [life-interview.md](life-interview.md) | «хочу рассказать о себе подробно», онбординг, «составь карту меня и моих отношений» | `self/map.md` + `self/spheres/` + `people/<slug>/` карточки + `self/interview-progress.md` |
 | [pattern-review.md](pattern-review.md) | по запросу: «покажи паттерны / что у меня повторяется» → читает `self/map.md` + `people/*/map.md` + разговоры | 2–4 повторяющихся темы ACROSS entities как гипотезы + вклад пользователя; пусто → честно «нет данных, давай онбординг». НЕ nightly `/patterns` из gbrain |
 
@@ -35,5 +37,9 @@
 флажит противоречия и просроченное → `commitment-track` при ревизии.
 
 **Кризис:** `crisis-support` → `red-flags` (всегда параллельно) → поддержка.
+
+**Онбординг:** `onboarding` (меню 4 путей + рекомендация микса) → `life-interview` (интервью)
+и/или `ingest` (терапия / дневники / переписки) → наполненные `self/` + `people/` →
+`pattern-review` / `multi-lens-read`. Любой путь — в любом порядке и повторно.
 
 **Мета:** `brain-first`, `co-thinking`, `red-flags`, `memory`, `self-improvement` — поверх всего.

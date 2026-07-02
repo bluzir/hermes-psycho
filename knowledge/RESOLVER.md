@@ -23,6 +23,8 @@
 | Сепарация, границы со взрослыми родителями | family | `family/` (differentiation, boundaries) | `decision-support` |
 | «Откуда у меня этот паттерн», корни в детстве | любой | `family/` + `schema-therapy/` + `attachment/` | `multi-lens-read` |
 | Сливаю дела/сделки на пике успеха, не довожу до конца, прокрастинирую уязвимый шаг | любой | `self-regulation/` (+ `attachment/`, `ifs/`) | `multi-lens-read` |
+| Первый запуск / пустая база / «онбординг» / «начнём» / `/onboarding` | любой | — (маршрутизатор) | `onboarding` |
+| «Переработай инбокс / data/raw», «залей транскрипты / дневники / переписки» | любой | по типу источника: `attachment/`+`ifs/`+`schema-therapy/` / `systemic/`+`communication/` | `ingest` |
 | Рассказать о себе подробно / онбординг / составить карту | любой | все слои | `life-interview` |
 | «Покажи паттерны / что у меня повторяется» (по всей базе) | любой | `attachment/` + `ifs/` + `schema-therapy/` + `systemic/` | `pattern-review` (+ `multi-lens-read`) |
 

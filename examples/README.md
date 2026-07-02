@@ -46,5 +46,13 @@
 - `contexts/krug-studii/profile.md` · `map.md` — круг друзей Alex через системную оптику
   (роли, петли, треугольник-буфер), где паттерн темпа проявляется на уровне группы.
 
+**Онбординг (вход→дистиллят):**
+- `onboarding/README.md` — как сырьё превращается в выжимку; в реальном деплое сырьё лежит
+  в `data/raw/` (gitignored, не в индексе), здесь — только для наглядности.
+- `onboarding/raw-therapy-excerpt.md` · `raw-chat-excerpt.md` — выдуманное сырьё
+  (транскрипт терапии, переписка с Кимом).
+- `onboarding/distilled-self-map-excerpt.md` · `distilled-kim-card-excerpt.md` — что из сырья
+  агент записал бы в [[self/map]] и `people/kim/` как помеченные гипотезы с провенансом.
+
 Чтобы начать своё — копируй `_TEMPLATE`-каталоги из `people/`, `self/`, `contexts/`,
 а этот пример держи как ориентир.
